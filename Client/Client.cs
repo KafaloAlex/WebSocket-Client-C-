@@ -85,7 +85,8 @@ namespace clientn
             byte[] byteToSend = ASCIIEncoding.ASCII.GetBytes(data);
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write("Sending : " + data);
-
+            Console.WriteLine()
+;
             stream.Write(byteToSend, 0, byteToSend.Length);
 
             //receive
