@@ -7,8 +7,8 @@ namespace clientn
     class Program
     {
 
-        static string HOST = "...";
-        static int PORT = 9000;
+        static string HOST = "192.168.70.51";
+        static int PORT = 8000;
 
         static TcpClient client;
 
@@ -27,7 +27,7 @@ namespace clientn
                     client = new TcpClient();
                     client.Connect(HOST, PORT);
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("Client is connected");
+                    Console.WriteLine("Connexion établie");
 
                 }
                 catch (Exception ex)
@@ -65,8 +65,8 @@ namespace clientn
             }
 
 
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Connection closed suuccesfull");
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine("Connection closed succesful");
 
         }
 
@@ -76,7 +76,7 @@ namespace clientn
             if (client == null)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Connection is altready closed");
+                Console.WriteLine("Connection is already closed");
                 return;
             }
 
@@ -84,7 +84,7 @@ namespace clientn
             NetworkStream stream = client.GetStream();
             byte[] byteToSend = ASCIIEncoding.ASCII.GetBytes(data);
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Sending : " + data);
+            Console.Write("Sending : " + data);
 
             stream.Write(byteToSend, 0, byteToSend.Length);
 
@@ -92,7 +92,7 @@ namespace clientn
             byte[] byteToRead = new byte[client.ReceiveBufferSize];
             int byteRead = stream.Read(byteToRead, 0, client.ReceiveBufferSize);
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("Received : " + Encoding.ASCII.GetString(byteToRead, 0, byteRead));
+            Console.Write("Server Response : " + Encoding.ASCII.GetString(byteToRead, 0, byteRead));
 
         }
 
@@ -100,27 +100,43 @@ namespace clientn
         {
             string lineRead;
 
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Etablissement de la liaison, veuillez patientez...");
+                OpenConnection();
             do
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\n\n Enter option (1-Open, 2-Connection, 3-Close, 4-Q)");
+                
+
+                Console.Write("Enter data to send : >>");
+                string data = Console.ReadLine();
+                SendData(data);
+                Console.WriteLine();
+
+                Console.Write("Voulez vous répondre (Oui ou Non): ");
                 lineRead = Console.ReadLine();
-                switch (lineRead)
+
+                if (lineRead.ToLower() == "non")
+                {
+                    CloseConnection();
+                    break;
+                }
+                    
+                /*switch (lineRead)
                 {
                     case "1":
                         OpenConnection();
                         break;
                     case "2":
-                        Console.WriteLine("Enter data to sned");
+                        Console.Write("Enter data to send : >>");
                         string data = Console.ReadLine();
                         SendData(data);
                         break;
                     case "3":
                         CloseConnection();
                         break;
-                }
+                }*/
 
-            } while (!lineRead.Equals("4"));
+            } while (lineRead.ToLower() != "non");
         }
     }
 }
