@@ -120,7 +120,7 @@ namespace clientn
                         break;
                 }
 
-            } while (lineRead.Equals("4"));
+            } while (!lineRead.Equals("4"));
         }
     }
 }
